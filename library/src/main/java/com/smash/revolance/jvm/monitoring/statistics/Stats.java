@@ -17,7 +17,7 @@ public class Stats
         metaSeries.put(label, series);
     }
 
-    public Series getSerie(String label)
+    public Series getSeries(String label)
     {
         return metaSeries.get(label);
     }

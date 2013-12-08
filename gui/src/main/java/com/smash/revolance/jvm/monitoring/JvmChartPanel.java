@@ -2,18 +2,19 @@ package com.smash.revolance.jvm.monitoring;
 
 import com.smash.revolance.jvm.monitoring.jvm.Jvm;
 import com.smash.revolance.jvm.monitoring.statistics.JvmStats;
+import com.smash.revolance.jvm.monitoring.statistics.Stats;
+import com.smash.revolance.jvm.monitoring.statistics.formulas.TotalSpaceUsage;
+import com.smash.revolance.jvm.monitoring.utils.Serie;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.data.time.Millisecond;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.data.time.*;
 import org.jfree.data.xy.XYDataset;
 
 import javax.swing.*;
-import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created by ebour on 08/12/13.
@@ -22,9 +23,9 @@ public class JvmChartPanel extends JPanel
 {
     private final ChartPanel chartPanel;
     private final TimeSeries series;
-    private final JvmStats stats;
+    private JvmStats stats = new JvmStats();
 
-    public JvmChartPanel(Jvm jvm) throws IOException
+    public JvmChartPanel(Jvm jvm)
     {
         this.series = new TimeSeries("Random Data", Millisecond.class);
         final TimeSeriesCollection dataset = new TimeSeriesCollection(this.series);
@@ -57,20 +58,37 @@ public class JvmChartPanel extends JPanel
 
     private void autoUpdate()
     {
-        new Runnable(){
+        final TotalSpaceUsage totalSpaceUsage = new TotalSpaceUsage();
+        new Thread(){
 
             @Override
             public void run() {
-                long  mark = System.currentTimeMillis();
+                long  since = System.currentTimeMillis();
                 while(true)
                 {
                     // Retrieve all the series and add on point for each date
                     // series.add(new Millisecond(), this.lastValue);
-                    doAwait(800);
-                    mark+=800;
+
+                    try
+                    {
+                        Stats statistics = stats.getSeries(since, totalSpaceUsage);
+                        Serie serie = statistics.getSeries("Usage").getSerie("Usage");
+                        for(Date date : serie.getDates())
+                        {
+                            double val = Double.valueOf(serie.getDataAt(date.getTime())).doubleValue();
+                            TimeSeriesDataItem point = new TimeSeriesDataItem(new FixedMillisecond(date.getTime()), val);
+                            series.add(point);
+                        }
+                        doAwait(800);
+                        since+=800;
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
             }
-        }.run();
+        }.start();
 
     }
 

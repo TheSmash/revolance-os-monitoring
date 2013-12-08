@@ -22,13 +22,18 @@ public class JvmStats
 {
     private static final Logger LOG = Logger.getLogger(JvmStats.class);
 
-    private final long startTime;
-    private final File statsFile;
+    private long startTime;
+    private File statsFile;
 
-    public JvmStats(Jvm jvm) throws IOException
+    public JvmStats(Jvm jvm)
     {
         this.statsFile = jvm.getStatiticsFile();
         this.startTime = jvm.getStartTimestamp();
+    }
+
+    public JvmStats()
+    {
+        startTime = System.currentTimeMillis();
     }
 
     public Stats getSeries(long since, ReduceOperator... reduceOperators) throws Exception
@@ -107,8 +112,12 @@ public class JvmStats
         return series;
     }
 
-    public File getStatiticsFile()
+    public File getStatiticsFile() throws IOException
     {
+        if(statsFile == null)
+        {
+            statsFile = File.createTempFile("empty", "file");
+        }
         return statsFile;
     }
 

@@ -268,4 +268,10 @@ public class Jvm
         return true;
     }
 
+    @Override
+    protected void finalize() throws Throwable
+    {
+        cmdline.kill();
+    }
+
 }

@@ -45,7 +45,7 @@ public class JvmWatchersTest
         TotalSpaceUsage totalSpaceUsage = new TotalSpaceUsage();
 
         Stats stats = memoryConsumer.getSeries(mark, edenSpaceUsage, youngSpaceUsage, heapSpaceUsage, totalSpaceUsage);
-        Series heapSpaceSerie = stats.getSerie(heapSpaceUsage.getLabel());
+        Series heapSpaceSerie = stats.getSeries(heapSpaceUsage.getLabel());
 
     }
 

@@ -44,7 +44,6 @@ public class JvmMonitoring extends ApplicationFrame
     public static void main(final String[] args)
     {
         new JvmMonitoring("Jvm Monitoring Application").doMonitor();
-
     }
 
 }

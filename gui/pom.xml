@@ -23,7 +23,7 @@
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>com.smash.revolance.ui.cmdline.Main</mainClass>
+                            <mainClass>com.smash.revolance.jvm.monitoring.JvmMonitoring</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

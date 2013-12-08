@@ -1,5 +1,7 @@
 package com.smash.revolance.jvm.monitoring;
 
+import com.smash.revolance.jvm.monitoring.jvm.Jvm;
+
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,10 +12,24 @@ import java.util.Map;
 public class JvmChartListPanel extends JList
 {
     private static final Map<String, JvmChartPanel> jvmPannels = new HashMap<String, JvmChartPanel>();
+    private static final DefaultListModel model = new DefaultListModel();
 
-    public JvmChartPanel get(String vmid)
+    public JvmChartListPanel()
     {
-        return jvmPannels.get(vmid);
+        super();
+        add(new JList(model));
     }
 
+    public void addJvm(Jvm jvm)
+    {
+        JvmChartPanel chart = new JvmChartPanel(jvm);
+        model.addElement(chart);
+        chart.setVisible(true);
+        repaint();
+    }
+
+    public void delJvm(String vmid)
+    {
+        jvmPannels.remove(vmid).setVisible(false);
+    }
 }

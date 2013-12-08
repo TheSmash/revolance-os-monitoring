@@ -1,10 +1,14 @@
 package com.smash.revolance.jvm.monitoring;
 
 import com.smash.revolance.jvm.monitoring.jvm.Jvm;
+import com.smash.revolance.jvm.monitoring.jvm.Jvms;
+import com.smash.revolance.jvm.monitoring.jvm.filter.By;
+import com.smash.revolance.jvm.monitoring.jvm.filter.JvmSearchCriteria;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -36,13 +40,13 @@ public class JvmListElement extends JPanel implements ActionListener
 
     private void hideStatistics(String vmid)
     {
-        jvmChartListPanel.get(vmid).setVisible(false);
+        jvmChartListPanel.delJvm(vmid);
         doLayout();
     }
 
-    private void showStatistics(String vmid)
+    private void showStatistics(Jvm jvm)
     {
-        jvmChartListPanel.get(vmid).setVisible(false);
+        jvmChartListPanel.addJvm(jvm);
         doLayout();
     }
 
@@ -51,12 +55,20 @@ public class JvmListElement extends JPanel implements ActionListener
     {
         if(e.getActionCommand().contentEquals("foo"))
         {
-            String vmid = "";
             // get checkbox name
-            // if checked then
-            showStatistics(vmid);
-            // or
-            hideStatistics(vmid);
+            String vmid = "";
+            try
+            {
+                // if checked then
+                Jvm jvm = Jvms.find(JvmListPanelUpdater.watchers.listJvms(), new JvmSearchCriteria(By.VMNAME, vmid)).get(0);
+                showStatistics(jvm);
+                // or
+                hideStatistics(vmid);
+            }
+            catch (IOException e1)
+            {
+                e1.printStackTrace();
+            }
         }
     }
 }

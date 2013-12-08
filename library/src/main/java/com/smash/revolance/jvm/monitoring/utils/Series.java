@@ -30,16 +30,16 @@ public class Series
         this.series.put(key, serie);
     }
 
-    public Map<String, Serie> subSerie(long since)
+    public Series getSerie(long since)
     {
-        Map<String, Serie> serieMap = new HashMap<String, Serie>();
+        Series ans = new Series(this.label);
 
         for(String k : series.keySet())
         {
-            serieMap.put(k, serieMap.get(k).getDatas(since));
+            ans.addSerie(k, ans.getSerie(k).getDatas(since));
         }
 
-        return serieMap;
+        return ans;
     }
 
     public Serie getSerie(String col)
