@@ -5,14 +5,21 @@ import com.smash.revolance.jvm.monitoring.jvm.Jvm;
 import com.smash.revolance.jvm.monitoring.jvm.Jvms;
 import com.smash.revolance.jvm.monitoring.jvm.filter.By;
 import com.smash.revolance.jvm.monitoring.jvm.filter.JvmSearchCriteria;
+import com.smash.revolance.jvm.monitoring.statistics.JvmStats;
+import com.smash.revolance.jvm.monitoring.statistics.Stats;
+import com.smash.revolance.jvm.monitoring.statistics.formulas.EdenSpaceUsage;
+import com.smash.revolance.jvm.monitoring.statistics.formulas.HeapSpaceUsage;
+import com.smash.revolance.jvm.monitoring.statistics.formulas.TotalSpaceUsage;
+import com.smash.revolance.jvm.monitoring.statistics.formulas.YoungSpaceUsage;
 import com.smash.revolance.jvm.monitoring.utils.CmdlineHelper;
-import com.smash.revolance.jvm.monitoring.utils.Serie;
+import com.smash.revolance.jvm.monitoring.utils.Series;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -26,8 +33,44 @@ public class JvmWatchersTest
     @Test
     public void watcherShouldHandleJvmStatitics() throws Exception
     {
-        JvmWatchers watchers = new JvmWatchers("memory-consumer");
+        CmdlineHelper cmdline = launchMemoryConsumer();
 
+        JvmStats memoryConsumer = monitorMemoryConsumer("memory-consumer");
+
+        long mark = awaitForSomeDataAndStopMemoryConsumption(cmdline, 5000);
+
+        EdenSpaceUsage edenSpaceUsage = new EdenSpaceUsage();
+        YoungSpaceUsage youngSpaceUsage = new YoungSpaceUsage();
+        HeapSpaceUsage heapSpaceUsage = new HeapSpaceUsage();
+        TotalSpaceUsage totalSpaceUsage = new TotalSpaceUsage();
+
+        Stats stats = memoryConsumer.getSeries(mark, edenSpaceUsage, youngSpaceUsage, heapSpaceUsage, totalSpaceUsage);
+        Series heapSpaceSerie = stats.getSerie(heapSpaceUsage.getLabel());
+
+    }
+
+    private long awaitForSomeDataAndStopMemoryConsumption(CmdlineHelper cmdline, long duration) throws InterruptedException
+    {
+        long mark = System.currentTimeMillis();
+        Thread.sleep(duration);
+
+        cmdline.kill(); // Stop the momory consumer
+        return mark;
+    }
+
+    private JvmStats monitorMemoryConsumer(String vmName) throws IOException
+    {
+        JvmWatchers watchers = new JvmWatchers(vmName);
+        List<Jvm> jvms = Jvms.find(watchers.listJvms(), new JvmSearchCriteria(By.VMNAME, vmName));
+        Jvm memoryConsumer = jvms.get(0);
+
+        assertThat(memoryConsumer.getName(), equalTo(VMNAME));
+        assertThat(memoryConsumer.getOptions().containsKey("Xmx512M"), is(true));
+        return new JvmStats(memoryConsumer);
+    }
+
+    private CmdlineHelper launchMemoryConsumer() throws IOException, InterruptedException
+    {
         // Start the memory gobbler
         CmdlineHelper cmdline = new CmdlineHelper();
         cmdline.dir(new File(new File("").getAbsoluteFile(), "target/materials"));
@@ -35,14 +78,7 @@ public class JvmWatchersTest
         cmdline.cmd("java", "-Xmx512M", "-jar", VMNAME);
         cmdline.exec();
 
-        long mark = System.currentTimeMillis();
-
-
-        List<Jvm> jvms = Jvms.find(watchers.listJvms(), new JvmSearchCriteria(By.VMNAME, "memory-consumer"));
-        Jvm memoryConsumer = jvms.get(0);
-        assertThat(memoryConsumer.getOptions().containsKey("Xmx256M"), is(true));
-
-        Map<String, Serie> series = memoryConsumer.getSeries(mark);
+        return cmdline;
     }
 
 }

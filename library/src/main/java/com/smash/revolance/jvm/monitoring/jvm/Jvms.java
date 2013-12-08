@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by ebour on 16/11/13.
+ * Created by wsmash on 16/11/13.
  */
 public class Jvms
 {
@@ -32,7 +32,6 @@ public class Jvms
         }
 
         JvmSearchCriterias criterias = new JvmSearchCriterias();
-        criterias.add(By.HOST, jvm.getHost());
         criterias.add(By.VMID, jvm.getPid());
 
         for(Jvm knownJvm : jvms)

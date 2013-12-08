@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by ebour on 16/11/13.
+ * Created by wsmash on 16/11/13.
  */
 public class JstatCommand extends CmdlineHelper
 {
@@ -28,7 +28,7 @@ public class JstatCommand extends CmdlineHelper
 
     public static enum Option
     {
-        GCCAPACITY("gccapacity");
+        GC("gc");
 
         private String value = "";
 
@@ -46,22 +46,21 @@ public class JstatCommand extends CmdlineHelper
 
     public static enum Column
     {
-        NGCMN("Minimum new generation capacity (KB)."),
-        NGCMX("Maximum new generation capacity (KB)."),
-        NGC("Current new generation capacity (KB)."),
         S0C("Current survivor space 0 capacity (KB)."),
         S1C("Current survivor space 1 capacity (KB)."),
+        S0U("Survivor space 0 utilization (KB)."),
+        S1U("Survivor space 1 utilization (KB)."),
         EC("Current eden space capacity (KB)."),
-        OGCMN("Minimum old generation capacity (KB)."),
-        OGCMX("Maximum old generation capacity (KB)."),
-        OGC("Current old generation capacity (KB)."),
+        EU("Eden space utilization (KB)."),
         OC("Current old space capacity (KB)."),
-        PGCMN("Minimum permanent generation capacity (KB)."),
-        PGCMX("Maximum Permanent generation capacity (KB)."),
-        PGC("Current Permanent generation capacity (KB)."),
-        PC("Current Permanent space capacity (KB)."),
-        YGC("Number of Young generation GC Events."),
-        FGC("Number of Full GC Events.");
+        OU("Old space utilization (KB)."),
+        PC("Current permanent space capacity (KB)."),
+        PU("Permanent space utilization (KB)."),
+        YGC("Number of young generation GC Events."),
+        YGCT("Young generation garbage collection time."),
+        FGC("Number of full GC events."),
+        FGCT("Full garbage collection time."),
+        GCT("Total garbage collection time.");
 
 
         private String description = "";

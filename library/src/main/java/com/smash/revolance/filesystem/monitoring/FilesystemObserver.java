@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by ebour on 16/11/13.
+ * Created by wsmash on 16/11/13.
  */
 public class FilesystemObserver implements Runnable
 {

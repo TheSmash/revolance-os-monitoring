@@ -3,7 +3,7 @@ package com.smash.revolance.jvm.monitoring.utils;
 import java.util.List;
 
 /**
- * Created by ebour on 17/11/13.
+ * Created by wsmash on 17/11/13.
  */
 public class PatternHelper
 {

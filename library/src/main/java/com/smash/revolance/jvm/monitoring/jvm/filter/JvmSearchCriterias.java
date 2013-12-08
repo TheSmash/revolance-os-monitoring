@@ -8,7 +8,7 @@ import java.util.List;
  * JvmMatchingCrieterias defines several criterias that a jvm should be
  * matched against in order to be victorious.
  *
- * Created by ebour on 16/11/13.
+ * Created by wsmash on 16/11/13.
  */
 public class JvmSearchCriterias
 {

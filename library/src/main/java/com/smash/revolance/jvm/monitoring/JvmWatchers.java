@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by ebour on 16/11/13.
+ * Created by wsmash on 16/11/13.
  */
 public class JvmWatchers implements Runnable
 {
@@ -27,10 +27,6 @@ public class JvmWatchers implements Runnable
     {
         this.excludes.add("jstat");
         this.excludes.add("jps");
-        this.excludes.add("junit");
-        this.excludes.add("surefire");
-        this.excludes.add("maven");
-        this.excludes.add("jenkins");
     }
 
     public JvmWatchers(String includes)
@@ -39,34 +35,48 @@ public class JvmWatchers implements Runnable
         this.includes.addAll(Arrays.asList(includes.split(",")));
     }
 
+    public JvmWatchers(String includes, String excludes)
+    {
+        this(includes);
+        this.excludes.addAll(Arrays.asList(excludes.split(",")));
+    }
+
+    public void watch()
+    {
+        new Thread(this).start();
+    }
+
     @Override
     public void run()
     {
         while(true)
         {
-            _monitorJvms();
+            List<Jvm> jvmList = null;
+            try
+            {
+                // Add any new jvm to the jvms field object and start monitoring
+                jvmList = listJvms();
+                jvms.updateStatesIfMissing(jvmList);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
             sleep(2000);
         }
     }
 
-    private void _monitorJvms()
+    public List<Jvm> listJvms(long since) throws IOException
     {
-        List<Jvm> jvmList = null;
-        try
+        List<Jvm> jvms = new ArrayList<Jvm>();
+        for(Jvm jvm : listJvms())
         {
-            // Add any new jvm to the jvms field object and start monitoring
-            jvmList = listJvms();
-            jvms.updateStatesIfMissing(jvmList);
+            if(jvm.getStartTimestamp()>since)
+            {
+                jvms.add(jvm);
+            }
         }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public void monitorJvms()
-    {
-        run();
+        return jvms;
     }
 
     public List<Jvm> listJvms() throws IOException
@@ -79,7 +89,7 @@ public class JvmWatchers implements Runnable
             String pid  = jvmDatas.get(String.valueOf(By.VMID));
             String name = jvmDatas.get(String.valueOf(By.VMNAME));
 
-            if (!nameIsInExcludedPatterns(name) && nameIsInIncludedPatterns(name))
+            if (!nameIsInExcludedPatterns(name) || nameIsInIncludedPatterns(name))
             {
                 Jvm newJvm = monitorJvmIfUnknown(jvmDatas, pid, name, JstatCommand.Option.values());
 

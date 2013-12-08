@@ -3,7 +3,7 @@ package com.smash.revolance.jvm.monitoring.jvm.filter;
 import java.security.InvalidParameterException;
 
 /**
- * Created by ebour on 16/11/13.
+ * Created by wsmash on 16/11/13.
  */
 public class JvmSearchCriteria
 {

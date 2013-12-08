@@ -5,19 +5,20 @@ import com.smash.revolance.jvm.monitoring.jvm.filter.By;
 import com.smash.revolance.jvm.monitoring.jvm.filter.JvmSearchCriteria;
 import com.smash.revolance.jvm.monitoring.jvm.filter.JvmSearchCriterias;
 import com.smash.revolance.jvm.monitoring.utils.CmdlineHelper;
-import com.smash.revolance.jvm.monitoring.utils.Serie;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.security.InvalidParameterException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by ebour on 16/11/13.
+ * Created by wsmash on 16/11/13.
  */
 public class Jvm
 {
+    public static enum MemoryType {PERMANENT, OLD, EDEN, SURVIVOR, YOUNG, HEAP, TOTAL;};
+
     private long start = System.currentTimeMillis();
 
     private CmdlineHelper cmdline;
@@ -266,77 +267,5 @@ public class Jvm
 
         return true;
     }
-
-    public Map<String, Serie> getSeries(long since) throws IOException
-    {
-        String[] statistics = FileUtils.readFileToString(getStatiticsFile()).split("\\n");
-
-        String header = "";
-        if(statistics.length>0)
-        {
-            header = statistics[0];
-        }
-
-        List<Serie> columns = new ArrayList<Serie>();
-        Map<String, Serie> series = new HashMap<String, Serie>();
-        boolean first = true;
-        for(String col : header.split(" "))
-        {
-            if(col.isEmpty())
-                continue;
-
-            if(first)
-            {
-                first = false; // Do not add the timestamp column
-            }
-            else
-            {
-                Serie serie = new Serie(col, JstatCommand.Column.getLegend(col));
-                columns.add( serie );
-
-                series.put(col, serie);
-            }
-        }
-
-        first = true;
-        for(String sample : statistics)
-        {
-            if(first)
-            {
-                first = false; // Do not handle the header column
-            }
-            else
-            {
-                String[] samples = sample.split(" ");
-                boolean dateFound = false;
-                Date date = null;
-                Iterator<Serie> it = columns.iterator();
-                for(int sampleIdx = 0; sampleIdx < samples.length; sampleIdx++)
-                {
-                    String data = samples[sampleIdx];
-                    if(data.isEmpty())
-                        continue;
-
-                    if(!dateFound)
-                    {
-                        long timestamp = getStartTimestamp()+Integer.parseInt(data.split(",")[0]);
-                        date = new Date(timestamp);
-                        dateFound=true;
-                    }
-                    else
-                    {
-                        if(date.getTime()>since)
-                        {
-                            Serie serie = it.next();
-                            serie.addSample( date, data );
-                        }
-                    }
-                }
-            }
-        }
-
-        return series;
-    }
-
 
 }

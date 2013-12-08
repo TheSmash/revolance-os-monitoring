@@ -5,25 +5,18 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by ebour on 16/11/13.
+ * Created by wsmash on 16/11/13.
  */
 public class Serie
 {
     protected String legend;
-    protected String column;
 
     protected List<String> datas = new ArrayList<String>();
     protected List<Date>   dates = new ArrayList<Date>();
 
-    public Serie(String column, String legend)
+    public Serie(String legend)
     {
-        this.column = column;
         this.legend = legend;
-    }
-
-    public Serie()
-    {
-
     }
 
     public void addSample(Date date, String data)
@@ -34,7 +27,7 @@ public class Serie
 
     public Serie getDatas(long since)
     {
-        Serie serie = new Serie(this.column, this.legend);
+        Serie serie = new Serie(this.legend);
 
         for(int idx = 0; idx < datas.size(); idx++)
         {
@@ -45,6 +38,21 @@ public class Serie
         }
 
         return serie;
+    }
+
+    public List<Date> getDates(long since)
+    {
+        List<Date> dates = new ArrayList<Date>();
+
+        for(int idx = 0; idx < datas.size(); idx++)
+        {
+            if(dates.get(idx).getTime()>since)
+            {
+                dates.add(dates.get(idx));
+            }
+        }
+
+        return dates;
     }
 
     public List<Date> getDates()
@@ -61,4 +69,10 @@ public class Serie
         }
         return datas.get( idx );
     }
+
+    public String at(Date date)
+    {
+        return getDataAt(date.getTime());
+    }
+
 }

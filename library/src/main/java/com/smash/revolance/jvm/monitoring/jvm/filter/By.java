@@ -1,7 +1,7 @@
 package com.smash.revolance.jvm.monitoring.jvm.filter;
 
 /**
- * Created by ebour on 16/11/13.
+ * Created by wsmash on 16/11/13.
  */
 public enum By
 {
