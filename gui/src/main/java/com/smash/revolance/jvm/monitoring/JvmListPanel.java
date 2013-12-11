@@ -1,6 +1,9 @@
 package com.smash.revolance.jvm.monitoring;
 
 import com.smash.revolance.jvm.monitoring.jvm.Jvm;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 
@@ -9,6 +12,13 @@ import javax.swing.*;
  */
 public class JvmListPanel extends JScrollPane
 {
+    private static final Logger LOG = Logger.getLogger(JvmListPanel.class);
+
+    static
+    {
+        LOG.addAppender(new ConsoleAppender());
+    }
+
     private static final DefaultListModel model = new DefaultListModel();
 
     private final JvmChartListPanel chartListPanel;
@@ -24,7 +34,8 @@ public class JvmListPanel extends JScrollPane
     public void addJvm(Jvm jvm)
     {
         model.addElement(new JvmListElement(jvm, chartListPanel));
-        repaint();
+        LOG.log(Level.INFO, "Adding new jvm: " + jvm.getName());
+        doLayout();
     }
 
 }

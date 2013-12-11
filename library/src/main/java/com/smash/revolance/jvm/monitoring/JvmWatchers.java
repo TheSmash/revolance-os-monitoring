@@ -32,13 +32,19 @@ public class JvmWatchers implements Runnable
     public JvmWatchers(String includes)
     {
         this();
-        this.includes.addAll(Arrays.asList(includes.split(",")));
+        if(!includes.isEmpty())
+        {
+            this.includes.addAll(Arrays.asList(includes.split(",")));
+        }
     }
 
     public JvmWatchers(String includes, String excludes)
     {
         this(includes);
-        this.excludes.addAll(Arrays.asList(excludes.split(",")));
+        if(!excludes.isEmpty())
+        {
+            this.excludes = Arrays.asList(excludes.split(","));
+        }
     }
 
     public void watch()
@@ -89,7 +95,8 @@ public class JvmWatchers implements Runnable
             String pid  = jvmDatas.get(String.valueOf(By.VMID));
             String name = jvmDatas.get(String.valueOf(By.VMNAME));
 
-            if (!nameIsInExcludedPatterns(name) || nameIsInIncludedPatterns(name))
+            if (!nameIsInExcludedPatterns(name) && includes.isEmpty()
+                    || nameIsInIncludedPatterns(name))
             {
                 Jvm newJvm = monitorJvmIfUnknown(jvmDatas, pid, name, JstatCommand.Option.values());
 
@@ -135,12 +142,12 @@ public class JvmWatchers implements Runnable
 
     private boolean nameIsInExcludedPatterns(String name)
     {
-        return PatternHelper.nameIsIn(excludes, name);
+        return PatternHelper.nameIsIn(excludes, name, false);
     }
 
     private boolean nameIsInIncludedPatterns(String name)
     {
-        return PatternHelper.nameIsIn(includes, name);
+        return PatternHelper.nameIsIn(includes, name, true);
     }
 
     private void sleep(int ms)

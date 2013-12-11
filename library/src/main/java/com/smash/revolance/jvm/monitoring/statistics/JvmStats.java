@@ -25,15 +25,15 @@ public class JvmStats
     private long startTime;
     private File statsFile;
 
-    public JvmStats(Jvm jvm)
+    public JvmStats(long startTimestamp, File statiticsFile)
     {
-        this.statsFile = jvm.getStatiticsFile();
-        this.startTime = jvm.getStartTimestamp();
+        this.statsFile = statiticsFile;
+        this.startTime = startTimestamp;
     }
 
-    public JvmStats()
+    public JvmStats(Jvm jvm)
     {
-        startTime = System.currentTimeMillis();
+        this(jvm.getStartTimestamp(), jvm.getStatiticsFile());
     }
 
     public Stats getSeries(long since, ReduceOperator... reduceOperators) throws Exception
@@ -55,7 +55,7 @@ public class JvmStats
         return stats;
     }
 
-    private Series getRawSeries(long since) throws IOException
+    public Series getRawSeries(long since) throws IOException
     {
         String[] statistics = FileUtils.readFileToString(getStatiticsFile()).split("\\n");
 

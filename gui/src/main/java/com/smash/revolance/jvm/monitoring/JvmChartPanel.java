@@ -58,12 +58,13 @@ public class JvmChartPanel extends JPanel
 
     private void autoUpdate()
     {
-        final TotalSpaceUsage totalSpaceUsage = new TotalSpaceUsage();
+
         new Thread(){
 
             @Override
             public void run() {
                 long  since = System.currentTimeMillis();
+                final TotalSpaceUsage totalSpaceUsage = new TotalSpaceUsage();
                 while(true)
                 {
                     // Retrieve all the series and add on point for each date

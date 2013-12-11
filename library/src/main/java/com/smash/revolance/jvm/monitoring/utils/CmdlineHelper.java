@@ -83,6 +83,7 @@ public class CmdlineHelper
         LOG.log(Level.INFO, "Redirecting err to: " + err.getAbsolutePath() );
 
         Process process = pb.start();
+        Thread.sleep(200);
         if(sync)
         {
             process.waitFor();

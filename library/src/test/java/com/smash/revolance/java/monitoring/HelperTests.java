@@ -21,7 +21,7 @@ public class HelperTests
         List<String> patternsOK = asList("jstat");
         List<String> patternsKO = asList("jps");
 
-        assertThat(PatternHelper.nameIsIn(patternsOK, name), is(true));
-        assertThat(PatternHelper.nameIsIn(patternsKO, name), is(false));
+        assertThat(PatternHelper.nameIsIn(patternsOK, name, true), is(true));
+        assertThat(PatternHelper.nameIsIn(patternsKO, name, true), is(false));
     }
 }

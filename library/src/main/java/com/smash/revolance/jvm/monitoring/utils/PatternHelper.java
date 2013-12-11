@@ -7,14 +7,17 @@ import java.util.List;
  */
 public class PatternHelper
 {
-    public static boolean nameIsIn(List<String> patterns, String name)
+    public static boolean nameIsIn(List<String> patterns, String name, boolean check)
     {
         boolean match = false;
         for(String exclude : patterns)
         {
-            if(name.toLowerCase().contains(exclude))
+            if(!exclude.isEmpty() && !check)
             {
-                match = true;
+                if(name.toLowerCase().contains(exclude))
+                {
+                    match = true;
+                }
             }
             if(match)
             {

@@ -23,6 +23,9 @@ public class JvmListElement extends JPanel implements ActionListener
         this.jvmChartListPanel = jvmChartListPanel;
         add(createJvmCheckBox(jvm.getPid()));
         add(createJvmLabel(jvm.getPid(), jvm.getName(), jvm.getOptions()));
+        setSize(300, 40);
+        setVisible(true);
+        doLayout();
     }
 
     private JLabel createJvmLabel(String vmid, String name, Map<String, String> options) {
@@ -55,15 +58,21 @@ public class JvmListElement extends JPanel implements ActionListener
     {
         if(e.getActionCommand().contentEquals("foo"))
         {
-            // get checkbox name
-            String vmid = "";
+            // getCheckboxName
+            String vmid = ((JCheckBox)e.getSource()).getName();
             try
             {
-                // if checked then
                 Jvm jvm = Jvms.find(JvmListPanelUpdater.watchers.listJvms(), new JvmSearchCriteria(By.VMNAME, vmid)).get(0);
-                showStatistics(jvm);
-                // or
-                hideStatistics(vmid);
+
+                // isChecked
+                if(((JCheckBox)e.getSource()).isSelected())
+                {
+                    showStatistics(jvm);
+                }
+                else
+                {
+                    hideStatistics(vmid);
+                }
             }
             catch (IOException e1)
             {

@@ -41,14 +41,26 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>unpack</id>
+                        <id>deploy-memory-consumer</id>
                         <phase>process-test-resources</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeArtifactIds>java-monitoring-materials-memory-consumer</includeArtifactIds>
+                            <includeArtifactIds>jvm-monitoring-materials-memory-consumer</includeArtifactIds>
                             <outputDirectory>target/materials</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unzip-memory-consumer-stats-resource</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>jvm-monitoring-materials-memory-consumer</includeArtifactIds>
+                            <outputDirectory>target/materials</outputDirectory>
+                            <includes>**/**.stats</includes>
                         </configuration>
                     </execution>
                 </executions>
