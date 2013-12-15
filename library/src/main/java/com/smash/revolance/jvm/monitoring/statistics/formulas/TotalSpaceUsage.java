@@ -1,10 +1,8 @@
 package com.smash.revolance.jvm.monitoring.statistics.formulas;
 
-import com.smash.revolance.jvm.monitoring.jvm.Jvm;
+import com.smash.revolance.jvm.monitoring.statistics.MemoryType;
 import com.smash.revolance.jvm.monitoring.utils.Serie;
 import com.smash.revolance.jvm.monitoring.utils.Series;
-
-import java.util.Date;
 
 /**
  * Created by ebour on 08/12/13.
@@ -14,7 +12,7 @@ public class TotalSpaceUsage implements ReduceOperator
     @Override
     public String getLabel()
     {
-        return String.valueOf(Jvm.MemoryType.TOTAL);
+        return String.valueOf(MemoryType.TOTAL);
     }
 
     @Override
@@ -26,19 +24,19 @@ public class TotalSpaceUsage implements ReduceOperator
         Serie usage = new Serie("Usage");
         Serie maxUsage = new Serie("Capacity");
 
-        for(Date date : series.getDates("Usage"))
+        for(Long date : series.getDates(since))
         {
-            int usageData = Integer.parseInt(heapSpaceUsage.getSerie("Usage").at(date))
-                                 + Integer.parseInt(permanentSpaceUsage.getSerie("Usage").at(date));
-            usage.addSample(date, ""+usageData);
+            double usageData = heapSpaceUsage.getSerie("Usage").at(date)
+                                 + permanentSpaceUsage.getSerie("Usage").at(date);
+            usage.addSample(date, usageData);
 
-            int maxUsageData = Integer.parseInt(heapSpaceUsage.getSerie("Capacity").at(date))
-                                     + Integer.parseInt(permanentSpaceUsage.getSerie("Capacity").at(date));
+            double maxUsageData = heapSpaceUsage.getSerie("Capacity").at(date)
+                                     + permanentSpaceUsage.getSerie("Capacity").at(date);
 
-            maxUsage.addSample(date, ""+maxUsageData);
+            maxUsage.addSample(date, maxUsageData);
         }
 
-        Series ans = new Series(getLabel());
+        Series ans = new Series();
         ans.addSerie("Usage", usage);
         ans.addSerie("Capacity", maxUsage);
 

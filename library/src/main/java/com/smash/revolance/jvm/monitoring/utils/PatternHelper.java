@@ -1,33 +1,28 @@
 package com.smash.revolance.jvm.monitoring.utils;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by wsmash on 17/11/13.
  */
 public class PatternHelper
 {
-    public static boolean nameIsIn(List<String> patterns, String name, boolean check)
+    public static boolean nameIsIn(List<String> patterns, String name)
     {
         boolean match = false;
-        for(String exclude : patterns)
+        for(String pattern : patterns)
         {
-            if(!exclude.isEmpty() && !check)
-            {
-                if(name.toLowerCase().contains(exclude))
-                {
-                    match = true;
-                }
-            }
+            Matcher matcher = Pattern.compile(pattern).matcher(name);
+            match = matcher.matches();
+
+            // Optimization
             if(match)
             {
                 break;
             }
         }
-        if(match)
-        {
-            return true;
-        }
-        return false;
+        return match;
     }
 }

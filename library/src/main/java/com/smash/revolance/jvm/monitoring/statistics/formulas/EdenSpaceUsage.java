@@ -1,11 +1,9 @@
 package com.smash.revolance.jvm.monitoring.statistics.formulas;
 
 import com.smash.revolance.jvm.monitoring.commands.JstatCommand;
-import com.smash.revolance.jvm.monitoring.jvm.Jvm;
+import com.smash.revolance.jvm.monitoring.statistics.MemoryType;
 import com.smash.revolance.jvm.monitoring.utils.Serie;
 import com.smash.revolance.jvm.monitoring.utils.Series;
-
-import java.util.Date;
 
 /**
  * User: wsmash
@@ -16,7 +14,7 @@ public class EdenSpaceUsage implements ReduceOperator
 {
     public String getLabel()
     {
-        return String.valueOf(Jvm.MemoryType.EDEN);
+        return String.valueOf(MemoryType.EDEN);
     }
 
     @Override
@@ -25,13 +23,13 @@ public class EdenSpaceUsage implements ReduceOperator
         Serie usage = new Serie("Usage");
         Serie maxUsage = new Serie("Capacity");
 
-        for(Date date : series.getDates(JstatCommand.Column.EC, since))
+        for(Long date : series.getDates(since))
         {
             usage.addSample(date, series.getSerie(JstatCommand.Column.EU).at(date));
             maxUsage.addSample(date, series.getSerie(JstatCommand.Column.EC).at(date));
         }
 
-        Series ans = new Series(getLabel());
+        Series ans = new Series();
         ans.addSerie("Usage", usage);
         ans.addSerie("Capacity", maxUsage);
 

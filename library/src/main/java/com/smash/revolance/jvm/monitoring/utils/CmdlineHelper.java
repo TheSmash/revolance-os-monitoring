@@ -83,7 +83,7 @@ public class CmdlineHelper
         LOG.log(Level.INFO, "Redirecting err to: " + err.getAbsolutePath() );
 
         Process process = pb.start();
-        Thread.sleep(200);
+        Thread.sleep(300);
         if(sync)
         {
             process.waitFor();
@@ -104,31 +104,18 @@ public class CmdlineHelper
         return id;
     }
 
-    public void write(String in) throws IOException
+    public CmdlineHelper write(String in) throws IOException
     {
         FileUtils.writeStringToFile( this.in, in );
+        return this;
     }
 
-    public void waitInSec(int seconds)
+    public CmdlineHelper waitInMs(int ms)
     {
-        long mark = System.currentTimeMillis();
-        while( (System.currentTimeMillis() - mark) < seconds*1000)
-        {
-            sleep( 1 );
-        }
+        sleep( ms );
+        return this;
     }
 
-    private void sleep(int seconds)
-    {
-        try
-        {
-            Thread.sleep( seconds );
-        }
-        catch (InterruptedException e)
-        {
-            // Ignore gently
-        }
-    }
 
     public CmdlineHelper awaitOut(String line, int timeout) throws Exception
     {
@@ -240,4 +227,15 @@ public class CmdlineHelper
         return out().contains( line );
     }
 
+    private void sleep(int seconds)
+    {
+        try
+        {
+            Thread.sleep( seconds );
+        }
+        catch (InterruptedException e)
+        {
+            // Ignore gently
+        }
+    }
 }

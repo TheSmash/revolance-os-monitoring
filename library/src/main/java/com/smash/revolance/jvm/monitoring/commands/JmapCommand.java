@@ -18,7 +18,7 @@ public class JmapCommand extends CmdlineHelper
         super();
         List<String> cmdline = new ArrayList<String>();
         cmdline.add("jmap");
-        cmdline.add("-dump:format=b,file="+dumpFile);
+        cmdline.add("-dump:file="+dumpFile);
         cmdline.add(vmid);
         cmd(cmdline.toArray(new String[cmdline.size()]));
     }

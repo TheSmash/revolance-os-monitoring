@@ -21,6 +21,17 @@
 
     <properties>
 
+        <jetty.version>9.1.0.M0</jetty.version>
+        <jersey.version>1.5</jersey.version>
+        <jettyson.version>1.3.1</jettyson.version>
+        <jackson.version>1.9.8</jackson.version>
+        <jstl.version>1.1.2</jstl.version>
+        <taglibs.version>1.1.2</taglibs.version>
+        <servlet-api.version>2.5</servlet-api.version>
+        <jetty-runner.version>8.1.13.v20130916</jetty-runner.version>
+        <spring.version>3.0.5.RELEASE</spring.version>
+        <rendersnake.version>1.7.2</rendersnake.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jfreechart.version>1.0.0</jfreechart.version>
 
@@ -29,7 +40,7 @@
     <modules>
         <module>materials</module>
         <module>library</module>
-        <module>gui</module>
+        <module>server</module>
     </modules>
 
     <dependencyManagement>
@@ -44,26 +55,82 @@
                 <artifactId>log4j</artifactId>
                 <version>1.2.17</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.smash.revolance</groupId>
+                <artifactId>jvm-monitoring-library</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smash.revolance</groupId>
+                <artifactId>jvm-monitoring-materials-memory-consumer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- Spring 3 -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-oxm</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <!-- JSTL -->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>jstl</artifactId>
+                <version>${jstl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>taglibs</groupId>
+                <artifactId>standard</artifactId>
+                <version>${taglibs.version}</version>
+            </dependency>
+
+            <!-- HttpServletRequest / HttpServletResponse -->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>${servlet-api.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- Rendersnake -->
+            <dependency>
+                <groupId>org.rendersnake</groupId>
+                <artifactId>rendersnake</artifactId>
+                <version>${rendersnake.version}</version>
+            </dependency>
+
+            <!-- Test dependencies -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.11</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>jfree</groupId>
-                <artifactId>jcommon</artifactId>
-                <version>${jfreechart.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jfree</groupId>
-                <artifactId>jfreechart</artifactId>
-                <version>${jfreechart.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.smash.revolance</groupId>
-                <artifactId>jvm-monitoring-library</artifactId>
-                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

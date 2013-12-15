@@ -1,11 +1,9 @@
 package com.smash.revolance.jvm.monitoring.statistics.formulas;
 
 import com.smash.revolance.jvm.monitoring.commands.JstatCommand;
-import com.smash.revolance.jvm.monitoring.jvm.Jvm;
+import com.smash.revolance.jvm.monitoring.statistics.MemoryType;
 import com.smash.revolance.jvm.monitoring.utils.Serie;
 import com.smash.revolance.jvm.monitoring.utils.Series;
-
-import java.util.Date;
 
 /**
  * Created by ebour on 08/12/13.
@@ -16,7 +14,7 @@ public class SurvivorSpaceUsage implements ReduceOperator
 {
     public String getLabel()
     {
-        return String.valueOf(Jvm.MemoryType.SURVIVOR);
+        return String.valueOf(MemoryType.SURVIVOR);
     }
 
     @Override
@@ -25,19 +23,19 @@ public class SurvivorSpaceUsage implements ReduceOperator
         Serie usage = new Serie("Usage");
         Serie maxUsage = new Serie("Capacity");
 
-        for(Date date : series.getDates(JstatCommand.Column.S0C, since))
+        for(Long date : series.getDates(since))
         {
-            int usageData = Integer.parseInt(series.getSerie(JstatCommand.Column.S0U).at(date))
-                                + Integer.parseInt(series.getSerie(JstatCommand.Column.S1U).at(date));
-            usage.addSample(date, ""+usageData);
+            double usageData = series.getSerie(JstatCommand.Column.S0U).at(date)
+                                + series.getSerie(JstatCommand.Column.S1U).at(date);
+            usage.addSample(date, usageData);
 
-            int maxUsageData = Integer.parseInt(series.getSerie(JstatCommand.Column.S0C).at(date))
-                                    + Integer.parseInt(series.getSerie(JstatCommand.Column.S1C).at(date));
+            double maxUsageData = series.getSerie(JstatCommand.Column.S0C).at(date)
+                                    + series.getSerie(JstatCommand.Column.S1C).at(date);
 
-            maxUsage.addSample(date, ""+maxUsageData);
+            maxUsage.addSample(date, maxUsageData);
         }
 
-        Series ans = new Series(getLabel());
+        Series ans = new Series();
         ans.addSerie("Usage", usage);
         ans.addSerie("Capacity", maxUsage);
 

@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Jvms
 {
-    private List<Jvm> jvms = new ArrayList<Jvm>();
+    private List<Jvm> jvms = new ArrayList();
 
     public List<Jvm> getAll()
     {
@@ -32,7 +32,7 @@ public class Jvms
         }
 
         JvmSearchCriterias criterias = new JvmSearchCriterias();
-        criterias.add(By.VMID, jvm.getPid());
+        criterias.add(By.VMID, jvm.getId());
 
         for(Jvm knownJvm : jvms)
         {
@@ -45,11 +45,11 @@ public class Jvms
         return true;
     }
 
-    public static List<Jvm> find(List<Jvm> jvms, JvmSearchCriteria criteria)
+    public static List<Jvm> find(List<Jvm> jvmWatchers, JvmSearchCriteria criteria)
     {
         JvmSearchCriterias criterias = new JvmSearchCriterias();
         criterias.add(criteria);
-        return find(jvms, criterias);
+        return find(jvmWatchers, criterias);
     }
 
     public static List<Jvm> find(List<Jvm> jvms, JvmSearchCriterias criterias)
@@ -67,17 +67,6 @@ public class Jvms
         return jvmList;
     }
 
-    public void updateStatesIfMissing(List<Jvm> jvmList)
-    {
-        for(Jvm jvm : jvms)
-        {
-            if(isUnknown(jvmList, jvm))
-            {
-                jvm.setState(Jvm.State.STOPPED);
-            }
-        }
-    }
-
     public boolean isUnknown(Jvm jvm)
     {
         return Jvms.isUnknown(this, jvm);
@@ -85,6 +74,8 @@ public class Jvms
 
     public void addJvm(Jvm jvm)
     {
-        jvms.add(jvm);
+        if(!jvms.contains(jvm))
+            jvms.add(jvm);
     }
+
 }

@@ -1,19 +1,22 @@
 package com.smash.revolance.jvm.monitoring.commands;
 
+import com.smash.revolance.jvm.monitoring.jvm.Jvm;
 import com.smash.revolance.jvm.monitoring.utils.CmdlineHelper;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by wsmash on 16/11/13.
  */
 public class JstatCommand extends CmdlineHelper
 {
-    public JstatCommand(String vmid, Option[] options, int frequency) throws IOException
+    private final long startTime;
+
+    public JstatCommand(Jvm jvm, Option[] options) throws IOException
     {
         super();
+        this.startTime = jvm.getStartTime();
         List<String> cmdline = new ArrayList<String>();
         cmdline.add("jstat");
         for(Option option : options)
@@ -21,9 +24,69 @@ public class JstatCommand extends CmdlineHelper
             cmdline.add(option.getValue());
         }
         cmdline.add("-t");
-        cmdline.add(vmid);
-        cmdline.add(frequency+"s");
+        cmdline.add(jvm.getId());
         cmd(cmdline.toArray(new String[cmdline.size()]));
+    }
+
+    public List<Map<String, String>> execute() throws IOException, InterruptedException
+    {
+        sync().exec();
+        return parse(startTime, out().split("\\n"));
+    }
+
+    public List<Map<String, String>> parse(long start, String[] statistics) throws IOException
+    {
+        String header = "";
+        if (statistics.length > 0) {
+            header = statistics[0];
+        }
+
+        List<String> columns = new ArrayList<String>();
+        List<Map<String, String>> series = new ArrayList<Map<String, String>>();
+        for (String col : header.split(" "))
+        {
+            if (col.isEmpty())
+                continue;
+
+            columns.add(String.valueOf(col));
+        }
+
+        boolean firstRow = true;
+        for (String sample : statistics)
+        {
+            if(firstRow)
+            {
+                firstRow = false; // First row is the column
+            }
+            else
+            {
+                Map<String, String> serie = new HashMap<String, String>();
+
+                boolean firstSample = true;
+                String[] samples = sample.split(" ");
+                Iterator<String> it = columns.iterator();
+                for (int sampleIdx = 0; sampleIdx < samples.length; sampleIdx++) {
+                    if (!samples[sampleIdx].isEmpty())
+                    {
+                        String column = it.next();
+                        String data = samples[sampleIdx].replaceAll(",", ".");
+                        if(firstSample) // firstSample is the timestamp
+                        {
+                            firstSample = false;
+                            long value = start + Long.parseLong(data.split("\\.")[0]);
+                            serie.put(column, ""+value);
+                        }
+                        else
+                        {
+                            serie.put(column, data);
+                        }
+                    }
+                }
+                series.add(serie);
+            }
+        }
+
+        return series;
     }
 
     public static enum Option
@@ -46,6 +109,7 @@ public class JstatCommand extends CmdlineHelper
 
     public static enum Column
     {
+        Timestamp("Time elpased since jvm start time"),
         S0C("Current survivor space 0 capacity (KB)."),
         S1C("Current survivor space 1 capacity (KB)."),
         S0U("Survivor space 0 utilization (KB)."),

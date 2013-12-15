@@ -20,7 +20,7 @@ public class JvmSearchCriteria
     {
         if(value == null || value.isEmpty())
         {
-            throw new InvalidParameterException("value parameter is " +value==null?"null":"empty. Use getJvms method without any parameters." + " Unable to do any matching.");
+            throw new InvalidParameterException("value parameter is " +value==null?"null":"empty. Use getWatchers method without any parameters." + " Unable to do any matching.");
         }
 
         this.value = value;
