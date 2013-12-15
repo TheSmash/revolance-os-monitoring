@@ -18,36 +18,6 @@
         <ul id="chart-list"></ul>
     </div>
 
-    <script>
-
-
-    var context = cubism.context()
-        .serverDelay(1e3)
-        .clientDelay(1e3)
-        .step(2e3)
-        .size(1170);
-
-    d3.select("#chart-list").call(function(div) {
-        div.append("div")
-            .attr("class", "rule")
-            .call(context.rule());
-
-         div.append("div")
-                .attr("class", "axis")
-                .call(context.axis().orient("top"));
-    });
-
-    </script>
-    <script>
-
-    // On mousemove, reposition the chart values to match the rule.
-    context.on("focus", function(i) {
-      d3.selectAll(".value").style("right", i == null ? null : context.size() - i + "px");
-    });
-
-    </script>
-
-
     <script src="${pageContext.request.contextPath}/js/jvm-list.js"></script>
     <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

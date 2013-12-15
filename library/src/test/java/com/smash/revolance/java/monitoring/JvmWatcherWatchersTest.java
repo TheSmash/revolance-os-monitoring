@@ -44,14 +44,15 @@ public class JvmWatcherWatchersTest
     public void watcherShouldHandleNewJvm() throws Exception
     {
         JvmWatcher memoryConsumer = monitorMemoryConsumer(VMNAME);
-        waitAndStopMemoryConsumer(4);
+        waitAndStopMemoryConsumer(4, memoryConsumer);
 
         Series metrics = memoryConsumer.getMetrics();
-        assertThat(metrics.getDates(memoryConsumer.getJvmStartTime()).isEmpty(), is(false));
+        assertThat(metrics.getDates(0).isEmpty(), is(false));
     }
 
-    private void waitAndStopMemoryConsumer(long duration) throws InterruptedException
+    private void waitAndStopMemoryConsumer(long duration, JvmWatcher memoryConsumer) throws Exception
     {
+        new Thread(memoryConsumer).start();
         Thread.sleep(duration*1000);
 
         cmdline.kill(); // Stop the memory consumer
@@ -67,7 +68,10 @@ public class JvmWatcherWatchersTest
 
         assertThat(memoryConsumer.getName(), equalTo(VMNAME));
         assertThat(memoryConsumer.getOptions().containsKey("-Xmx512M"), is(true));
-        return watchers.getWatcher(memoryConsumer);
+        JvmWatcher watcher = watchers.getWatcher(memoryConsumer);
+
+
+        return watcher;
     }
 
     private static CmdlineHelper launchMemoryConsumer() throws Exception

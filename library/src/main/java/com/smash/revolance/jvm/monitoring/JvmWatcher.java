@@ -35,7 +35,7 @@ public class JvmWatcher implements Runnable
         {
             try
             {
-                update();
+                watch();
                 Thread.currentThread().sleep(2000);
             }
             catch (Exception e)
@@ -46,7 +46,7 @@ public class JvmWatcher implements Runnable
         }
     }
 
-    public void update() throws IOException, InterruptedException
+    public void watch() throws IOException, InterruptedException
     {
         List<Map<String, String>> series = new JstatCommand(jvm, JstatCommand.Option.values()).execute();
         for(Map<String, String> serie : series)
@@ -57,7 +57,7 @@ public class JvmWatcher implements Runnable
                 if(!metric.contentEquals(String.valueOf(JstatCommand.Column.Timestamp)))
                 {
                     double data = Double.parseDouble(serie.get(metric));
-                    this.metrics.getSerie(metric).addSample(date, data);
+                    this.metrics.addSample(metric, date, data);
                 }
             }
         }
@@ -86,4 +86,10 @@ public class JvmWatcher implements Runnable
     {
         return metrics;
     }
+
+    public void setMetrics(Series metrics)
+    {
+        this.metrics = metrics;
+    }
+
 }

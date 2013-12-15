@@ -18,7 +18,7 @@
             // Initialisation du composant "sortable"
             $(obj).sortable({
                 axis: "y", // Le sortable ne s'applique que sur l'axe vertical
-                containment: "#chartList", // Le drag ne peut sortir de l'élément qui contient la liste
+                containment: "#chart-list", // Le drag ne peut sortir de l'élément qui contient la liste
                 handle: "li", // Le drag ne peut se faire que sur l'élément .item (le texte)
                 distance: 10, // Le drag ne commence qu'à partir de 10px de distance de l'élément
                 // Evenement appelé lorsque l'élément est relaché
@@ -38,34 +38,84 @@
         return this;
     };
 
-    var jvmMetric = function(vmid, metric) {
-        return context.metric(function(start, stop, step, callback) {
-            var time = new Date().getTime()
-            $.getJSON("/jvm-monitoring-server/api/vms/"+vmid+"/metrics/"+metric+"/?since"+time, function(results) {
-                    //callback(null, [100]);
-                    if (!results)
+    var createChartForJvm = function(vmid, vmname)
+    {
+        $.series = new Array();
+        $.getJSON("/jvm-monitoring-server/api/vms/"+vmid+"/metrics", function(metrics)
+        {
+            $.metrics = metrics.labels;
+            $.each($.metrics, function(idx, metric)
+            {
+                $.getJSON("/jvm-monitoring-server/api/vms/"+vmid+"/metrics/"+metric+"/?since=0", function(results) {
+                    if (results)
                     {
-                        return callback(new Error("unable to load data"));
+                        var samples = $.map(results.samples, function(sample){
+                            var array = new Array();
+                            array.push(sample.date)
+                            array.push(sample.data)
+
+                            return [array];
+                        });
+                        serie = { name: metric, data: samples };
+                        $.series.push( serie );
+                        if($.series.length===$.metrics.length)
+                        {
+                            // Create the chart
+                            $('#chart-'+vmid+' .chart').highcharts('StockChart', {
+                                chart : {
+                                    events : {
+                                        load : function() {
+                                            /*
+                                            // set up the updating of the chart each second
+                                            var series = this.series[0];
+                                            setInterval(function() {
+                                                var x = (new Date()).getTime(), // current time
+                                                y = Math.round(Math.random() * 100);
+                                                series.addPoint([x, y], true, true);
+                                            }, 1000);
+                                            */
+                                        }
+                                    }
+                                },
+
+                                rangeSelector: {
+                                    buttons: [{
+                                        count: 1,
+                                        type: 'minute',
+                                        text: '1M'
+                                    }, {
+                                        count: 5,
+                                        type: 'minute',
+                                        text: '5M'
+                                    }, {
+                                        type: 'all',
+                                        text: 'All'
+                                    }],
+                                    inputEnabled: false,
+                                    selected: 0
+                                },
+
+                                title : {
+                                    text : vmname
+                                },
+
+                                exporting: {
+                                    enabled: false
+                                },
+
+                                series : $.series
+                            });
+                        }
                     }
-                    else
-                    {
-                        callback(null, results.datas);
-                    }
+                });
             });
-        }, vmid+'-'+metric);
+        });
     }
 
     $.addChartForJvm = function(jvmId, jvmName)
     {;
         $("#chart-list").append('<li id="chart-'+jvmId+'"><div class="chart"></div></li>');
-        d3.select("#chart-"+jvmId).call(function(div) {
-
-            div.datum(jvmMetric(jvmId, "EU"));
-
-            div.append("div")
-                .attr("class", "horizon")
-                .call(context.horizon().height(110).title(jvmName))
-        });
+        createChartForJvm(jvmId, jvmName);
     }
 
     $.isChartForJvmDisplayed = function(vmid)
@@ -82,10 +132,15 @@
 
     $.delChartForJvm = function(jvmId)
     {
-
-        d3.select("#chart-"+jvmId+" .horizon")
-            .call(horizon.remove)
         $("#chart-"+jvmId).remove();
     }
+
+     $(document).ready(function( ){
+            Highcharts.setOptions({
+                global : {
+                    useUTC : false
+                }
+            });
+     });
 
 })(jQuery, window, document);

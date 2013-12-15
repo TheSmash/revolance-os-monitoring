@@ -38,14 +38,14 @@ public class Series
 
     public Serie getSerie(String col)
     {
-        if(!series.containsKey(col))
-            series.put(col, new Serie(col));
-        return series.get( col );
+        if(!this.series.containsKey(col))
+            this.series.put(col, new Serie(col));
+        return this.series.get( col );
     }
 
     public List<Double> getDatas(String col, long since)
     {
-        return getSerie(col, since).getDatas();
+        return getSerie(col).getDatas(since);
     }
 
     public List<Long> getDates(long since)
@@ -72,5 +72,10 @@ public class Series
     public Set<String> getLabels()
     {
         return series.keySet();
+    }
+
+    public void addSample(String col, long date, double data)
+    {
+        getSerie(col).addSample(date, data);
     }
 }

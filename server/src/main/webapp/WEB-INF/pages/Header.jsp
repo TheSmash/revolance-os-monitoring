@@ -19,15 +19,9 @@
         <link href="${pageContext.request.contextPath}/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen"/>
         <script src="${pageContext.request.contextPath}/libs/bootstrap/js/bootstrap.min.js"></script>
 
-        <!-- D3 -->
-        <script src="${pageContext.request.contextPath}/libs/d3/js/d3.js" charset="utf-8"></script>
-
-        <!-- Cubism -->
-        <script src="${pageContext.request.contextPath}/libs/cubism/js/cubism.js" charset="utf-8"></script>
-        <link href="${pageContext.request.contextPath}/libs/cubism/css/cubism.css" rel="stylesheet"/>
-
-        <!-- D3 -->
-        <script src="${pageContext.request.contextPath}/libs/highlight/js/highlight.js" charset="utf-8"></script>
+        <!-- Highstocks -->
+        <script src="${pageContext.request.contextPath}/libs/highstock/js/highstock.js"></script>
+        <script src="${pageContext.request.contextPath}/libs/highstock/js/exporting.js"></script>
 
         <!-- Revolance JSs -->
         <script src="${pageContext.request.contextPath}/js/jvm-list.js"></script>

@@ -15,6 +15,11 @@ body
     position: relative
 }
 
+.chart
+{
+    height: 400px;
+}
+
 #content
 {
     position: relative;

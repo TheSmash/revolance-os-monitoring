@@ -12,10 +12,14 @@ public class Serie
         return legend;
     }
 
-    protected String legend;
+    private String legend;
 
-    protected List<Double> datas = new ArrayList<Double>();
-    protected List<Long>   dates = new ArrayList<Long>();
+    private List<Sample> samples = new ArrayList<Sample>();
+
+    public List<Sample> getSamples()
+    {
+        return samples;
+    }
 
     public Serie(String legend)
     {
@@ -24,68 +28,61 @@ public class Serie
 
     public void addSample(long date, double data)
     {
-        dates.add(date);
-        datas.add(data);
+        samples.add(new Sample(date, data));
     }
 
-    public List<Double> getDatas(long since)
+    public List<Sample> getSamples(long since)
     {
-        List<Double> datas = new ArrayList<Double>();
+        List<Sample> samples = new ArrayList<Sample>();
 
-        for(int idx = 0; idx < this.datas.size(); idx++)
+        for(Sample sample : this.samples)
         {
-            if(this.dates.get(idx)>since)
+            if(sample.date>since)
             {
-                datas.add(this.datas.get(idx));
+                samples.add(sample);
             }
         }
 
-        return datas;
+        return samples;
     }
 
     public Serie getSerie(long since)
     {
         Serie serie = new Serie(this.legend);
 
-        for(int idx = 0; idx < datas.size(); idx++)
+        for(Sample sample : getSamples(since))
         {
-            if(dates.get(idx)>since)
-            {
-                serie.addSample(dates.get(idx), datas.get(idx));
-            }
+            serie.addSample(sample);
         }
 
         return serie;
+    }
+
+    private void addSample(Sample sample)
+    {
+        this.samples.add(sample);
     }
 
     public List<Long> getDates(long since)
     {
         List<Long> dates = new ArrayList<Long>();
 
-        for(int idx = 0; idx < this.datas.size(); idx++)
+        for(Sample sample : getSamples(since))
         {
-            if(this.dates.get(idx)>since)
-            {
-                dates.add(this.dates.get(idx));
-            }
+            dates.add(sample.date);
         }
 
-        return dates;
-    }
-
-    public List<Long> getDates()
-    {
         return dates;
     }
 
     public double getDataAt(long date)
     {
         int idx = 0;
-        while(dates.get(idx)>date)
+        while(this.samples.get(idx).date>date)
         {
             idx ++;
         }
-        return datas.get( idx );
+        return this.samples.get( idx ).date;
     }
 
     public double at(long date)
@@ -93,8 +90,15 @@ public class Serie
         return getDataAt(date);
     }
 
-    public List<Double> getDatas()
+    public List<Double> getDatas(long since)
     {
-        return getDatas(0);
+        List<Double> datas = new ArrayList<Double>();
+
+        for(Sample sample : getSamples(since))
+        {
+            datas.add(sample.data);
+        }
+
+        return datas;
     }
 }
