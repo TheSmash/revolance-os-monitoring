@@ -121,7 +121,7 @@
                                 },
 
                                 exporting: {
-                                    enabled: false
+                                    enabled: true
                                 },
 
                                 series : $.series
