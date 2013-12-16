@@ -41,6 +41,7 @@
     var createChartForJvm = function(vmid, vmname)
     {
         $.series = new Array();
+        $.times = new Object();
         $.getJSON("/jvm-monitoring-server/api/vms/"+vmid+"/metrics", function(metrics)
         {
             $.metrics = metrics.labels;
@@ -54,6 +55,7 @@
                             array.push(sample.date)
                             array.push(sample.data)
 
+                            $.times[metric] = sample.date // store the latest time value
                             return [array];
                         });
                         serie = { name: metric, data: samples };
@@ -65,6 +67,25 @@
                                 chart : {
                                     events : {
                                         load : function() {
+                                            var that = this;
+                                            setInterval(function() {
+                                                $.each($.series, function(idx, serie){
+                                                    $.getJSON("/jvm-monitoring-server/api/vms/"+vmid+"/metrics/"+metric+"/?since="+($.times[serie.name]-1000), function(results){
+                                                        if(results && results.samples)
+                                                        {
+                                                            $.each(results.samples, function(idx, sample){
+                                                                var array = new Array();
+                                                                array.push(sample.date)
+                                                                array.push(sample.data)
+
+                                                                that.series[idx].addPoint([array], true, true);
+                                                            });
+                                                            if(results.samples.length>0)
+                                                                $.times[metric] = results.samples[results.samples.length-1].date;
+                                                        }
+                                                    });
+                                                });
+                                            }, 2000);
                                             /*
                                             // set up the updating of the chart each second
                                             var series = this.series[0];

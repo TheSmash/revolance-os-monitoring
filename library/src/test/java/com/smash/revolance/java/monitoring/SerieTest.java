@@ -21,9 +21,9 @@ public class SerieTest
         serie.addSample(3, 1);
 
         assertThat(serie.getDatas(0).size(), is(3));
-        assertThat(serie.getDatas(1).size(), is(2));
-        assertThat(serie.getDatas(2).size(), is(1));
-        assertThat(serie.getDatas(3).size(), is(0));
+        assertThat(serie.getDatas(1).size(), is(3));
+        assertThat(serie.getDatas(2).size(), is(2));
+        assertThat(serie.getDatas(3).size(), is(1));
     }
 
     @Test
@@ -46,13 +46,13 @@ public class SerieTest
         assertThat(series.getDatas(serie1.getLegend(), 0).size(), is(3));
         assertThat(series.getDatas(serie2.getLegend(), 0).size(), is(3));
 
-        assertThat(series.getDatas(serie1.getLegend(), 1).size(), is(2));
-        assertThat(series.getDatas(serie2.getLegend(), 1).size(), is(2));
+        assertThat(series.getDatas(serie1.getLegend(), 1).size(), is(3));
+        assertThat(series.getDatas(serie2.getLegend(), 1).size(), is(3));
 
-        assertThat(series.getDatas(serie1.getLegend(), 2).size(), is(1));
-        assertThat(series.getDatas(serie2.getLegend(), 2).size(), is(1));
+        assertThat(series.getDatas(serie1.getLegend(), 2).size(), is(2));
+        assertThat(series.getDatas(serie2.getLegend(), 2).size(), is(2));
 
-        assertThat(series.getDatas(serie1.getLegend(), 3).size(), is(0));
-        assertThat(series.getDatas(serie2.getLegend(), 3).size(), is(0));
+        assertThat(series.getDatas(serie1.getLegend(), 3).size(), is(1));
+        assertThat(series.getDatas(serie2.getLegend(), 3).size(), is(1));
     }
 }

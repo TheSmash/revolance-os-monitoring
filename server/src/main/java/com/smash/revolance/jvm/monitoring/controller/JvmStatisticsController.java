@@ -71,7 +71,9 @@ public class JvmStatisticsController
     @RequestMapping(value = "/api/vms/{vmid}/metrics/{metric}", method = RequestMethod.GET, headers="Accept=application/json")
     public Serie getJvmMetric(@PathVariable("vmid") final String vmid, @PathVariable("metric") final String metric, @RequestParam(value = "since", defaultValue = "0") final long since, @RequestParam(value = "simulate", defaultValue = "false") final boolean simulate) throws Exception
     {
-        return getJvmMetrics(vmid, since, simulate).getSerie(metric);
+        Jvm jvm = getJvm(vmid, since, simulate);
+        Serie serie = monitoring.getMetrics(jvm).getSerie(metric, since);
+        return serie;
     }
 
     @RequestMapping(value = "/", headers="Accept=text/html")

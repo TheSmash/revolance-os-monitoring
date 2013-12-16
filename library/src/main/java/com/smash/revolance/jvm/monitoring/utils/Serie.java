@@ -37,7 +37,7 @@ public class Serie
 
         for(Sample sample : this.samples)
         {
-            if(sample.date>since)
+            if(sample.date>=since)
             {
                 samples.add(sample);
             }
@@ -78,7 +78,7 @@ public class Serie
     public double getDataAt(long date)
     {
         int idx = 0;
-        while(this.samples.get(idx).date>date)
+        while(this.samples.get(idx).date>=date)
         {
             idx ++;
         }

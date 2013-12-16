@@ -121,11 +121,11 @@ public class JstatCommand extends CmdlineHelper
         PC("Current permanent space capacity (KB)."),
         PU("Permanent space utilization (KB)."),
         YGC("Number of young generation GC Events."),
-        YGCT("Young generation garbage collection time."),
+        // YGCT("Young generation garbage collection time."),
         FGC("Number of full GC events."),
-        FGCT("Full garbage collection time."),
-        GCT("Total garbage collection time.");
-
+        // FGCT("Full garbage collection time."),
+        // GCT("Total garbage collection time.")
+        ;
 
         private String description = "";
 
