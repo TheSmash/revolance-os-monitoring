@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ps -ef|grep ${project.artifactId}|grep -v grep
+ps -ef|grep os-monitoring-server|grep -v grep
 
 if [ $? -eq 0 ]; then
     echo "Started"

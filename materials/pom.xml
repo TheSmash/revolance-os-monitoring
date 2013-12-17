@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>jvm-monitoring</artifactId>
+        <artifactId>os-monitoring</artifactId>
         <groupId>com.smash.revolance</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <packaging>pom</packaging>
-    <artifactId>jvm-monitoring-materials</artifactId>
+    <artifactId>os-monitoring-materials</artifactId>
 
     <modules>
         <module>memory-consumer</module>

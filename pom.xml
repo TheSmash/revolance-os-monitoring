@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.smash.revolance</groupId>
-    <artifactId>jvm-monitoring</artifactId>
+    <artifactId>os-monitoring</artifactId>
 
+    <name>RevoLance OS Monitoring</name>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
-
 
     <organization>
         <name>RevoLance</name>
@@ -33,7 +33,6 @@
         <rendersnake.version>1.7.2</rendersnake.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jfreechart.version>1.0.0</jfreechart.version>
 
     </properties>
 
@@ -41,10 +40,30 @@
         <module>materials</module>
         <module>library</module>
         <module>server</module>
+        <module>distrib</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+
+            <!-- Distrib artifact components management -->
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>os-monitoring-library</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>os-monitoring-materials-memory-consumer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>os-monitoring-server</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
+            </dependency>
+
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
@@ -56,16 +75,13 @@
                 <version>1.2.17</version>
             </dependency>
 
+            <!-- Jetty runner -->
             <dependency>
-                <groupId>com.smash.revolance</groupId>
-                <artifactId>jvm-monitoring-library</artifactId>
-                <version>${project.version}</version>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-runner</artifactId>
+                <version>${jetty-runner.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.smash.revolance</groupId>
-                <artifactId>jvm-monitoring-materials-memory-consumer</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+
             <!-- Spring 3 -->
             <dependency>
                 <groupId>org.springframework</groupId>

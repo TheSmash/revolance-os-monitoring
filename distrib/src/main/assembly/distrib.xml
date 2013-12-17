@@ -22,27 +22,15 @@
             <fileMode>0777</fileMode>
         </fileSet>
 
-        <fileSet>
-            <directory>${basedir}/target/materials</directory>
-            <outputDirectory>/</outputDirectory>
-            <excludes>
-                <exclude>**/*.stats</exclude>
-            </excludes>
-            <fileMode>0777</fileMode>
-        </fileSet>
-
-        <fileSet>
-            <directory>${basedir}/target</directory>
-            <outputDirectory>/bin</outputDirectory>
-            <includes>
-                <include>${project.artifactId}-${project.version}.war</include>
-            </includes>
-            <fileMode>0777</fileMode>
-        </fileSet>
-
     </fileSets>
 
     <dependencySets>
+        <dependencySet>
+            <outputDirectory>/bin</outputDirectory>
+            <includes>
+                <include>${project.groupId}:os-monitoring-server</include>
+            </includes>
+        </dependencySet>
         <dependencySet>
             <outputDirectory>/lib</outputDirectory>
             <includes>
@@ -52,7 +40,7 @@
         <dependencySet>
             <outputDirectory>/samples</outputDirectory>
             <includes>
-                <include>${project.groupId}:jvm-monitoring-materials-memory-consumer</include>
+                <include>${project.groupId}:os-monitoring-materials-memory-consumer</include>
             </includes>
         </dependencySet>
     </dependencySets>

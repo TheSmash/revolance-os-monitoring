@@ -17,14 +17,14 @@ import java.util.regex.Pattern;
 /**
  * Created by wsmash on 16/11/13.
  */
-public class FilesystemObserver implements Runnable
+public class FileSystemMonitoring implements Runnable
 {
     private final Path root;
 
-    private final static Logger LOG = Logger.getLogger(FilesystemObserver.class);
+    private final static Logger LOG = Logger.getLogger(FileSystemMonitoring.class);
     private final static File changeLog = new File("fsChangeLog.log");
 
-    public FilesystemObserver(File root) throws IOException
+    public FileSystemMonitoring(File root) throws IOException
     {
         this.root = Paths.get(root.getAbsolutePath());
         LOG.addAppender(new FileAppender(new Layout(){

@@ -3,7 +3,7 @@
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
-                <a class="brand" href="#">RevoLance Java Virtual Machine Monitoring</a>
+                <a class="brand" href="#">OS Monitoring</a>
                 <div class="nav-collapse collapse">
                     <ul class="nav pull-right">
                         <li onclick="$.updateJvmList()"><a data-toggle="modal" href="#myModal"><span class="glyphicon glyphicon-list"></span>jvms</a></li>
