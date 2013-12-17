@@ -1,5 +1,8 @@
 (function($,W,D){
 
+    $.times = new Object();
+    $.series = new Object();
+
     $.fn.chartList = function(options) {
 
         // Options par defaut
@@ -38,98 +41,93 @@
         return this;
     };
 
+    var getSerie = function(series, serieName){
+        var ans = undefined;
+        $.each(series, function(idx, serie){
+            if(serie.name===serieName)
+            {
+                ans = serie;
+                return false;
+            }
+        });
+        if(ans === undefined)
+            console.log('serieName: '+serieName+' is undefined for vmid: '+vmid)
+        return ans;
+    }
+
     var createChartForJvm = function(vmid, vmname)
     {
-        $.series = new Array();
-        $.times = new Object();
-        $.getJSON("/jvm-monitoring-server/api/vms/"+vmid+"/metrics", function(metrics)
-        {
-            $.metrics = metrics.labels;
-            $.each($.metrics, function(idx, metric)
+        $.times[vmid] = new Object();
+        $.series[vmid] = new Array();
+        $.getJSON("/jvm-monitoring-server/api/vms/"+vmid+"/metrics/?since=0", function(results) {
+            if (results)
             {
-                $.getJSON("/jvm-monitoring-server/api/vms/"+vmid+"/metrics/"+metric+"/?since=0", function(results) {
-                    if (results)
-                    {
-                        var samples = $.map(results.samples, function(sample){
-                            var array = new Array();
-                            array.push(sample.date)
-                            array.push(sample.data)
 
-                            $.times[metric] = sample.date // store the latest time value
-                            return [array];
-                        });
-                        serie = { name: metric, data: samples };
-                        $.series.push( serie );
-                        if($.series.length===$.metrics.length)
-                        {
-                            // Create the chart
-                            $('#chart-'+vmid+' .chart').highcharts('StockChart', {
-                                chart : {
-                                    events : {
-                                        load : function() {
-                                            var that = this;
-                                            setInterval(function() {
-                                                $.each($.series, function(idx, serie){
-                                                    $.getJSON("/jvm-monitoring-server/api/vms/"+vmid+"/metrics/"+metric+"/?since="+($.times[serie.name]-1000), function(results){
-                                                        if(results && results.samples)
-                                                        {
-                                                            $.each(results.samples, function(idx, sample){
-                                                                var array = new Array();
-                                                                array.push(sample.date)
-                                                                array.push(sample.data)
-
-                                                                that.series[idx].addPoint([array], true, true);
-                                                            });
-                                                            if(results.samples.length>0)
-                                                                $.times[metric] = results.samples[results.samples.length-1].date;
-                                                        }
-                                                    });
-                                                });
-                                            }, 2000);
-                                            /*
-                                            // set up the updating of the chart each second
-                                            var series = this.series[0];
-                                            setInterval(function() {
-                                                var x = (new Date()).getTime(), // current time
-                                                y = Math.round(Math.random() * 100);
-                                                series.addPoint([x, y], true, true);
-                                            }, 1000);
-                                            */
-                                        }
-                                    }
-                                },
-
-                                rangeSelector: {
-                                    buttons: [{
-                                        count: 1,
-                                        type: 'minute',
-                                        text: '1M'
-                                    }, {
-                                        count: 5,
-                                        type: 'minute',
-                                        text: '5M'
-                                    }, {
-                                        type: 'all',
-                                        text: 'All'
-                                    }],
-                                    inputEnabled: false,
-                                    selected: 0
-                                },
-
-                                title : {
-                                    text : vmname
-                                },
-
-                                exporting: {
-                                    enabled: true
-                                },
-
-                                series : $.series
-                            });
-                        }
-                    }
+                $.each(results.series, function(idx, serie){
+                    var samples = new Array();
+                    $.each(serie.samples, function(idx, sample){
+                        $.times[vmid][serie.legend] = sample.date // store the latest time value
+                        samples.push([sample.date, sample.data]);
+                    });
+                    $.series[vmid].push( { name: serie.legend, data: samples } );
                 });
-            });
+
+                // Create the chart
+                $('#chart-'+vmid+' .chart').highcharts('StockChart', {
+                    chart : {
+                        events : {
+                            load : function() {
+                                var that = this;
+                                setInterval(function() {
+                                    $.getJSON("/jvm-monitoring-server/api/vms/"+vmid+"/metrics/?since="+(new Date().getTime()-2000), function(results) {
+                                        if (results)
+                                        {
+                                            var series = new Array();
+                                            $.each(results.series, function(idx, serie){
+                                                $.each(serie.samples, function(idx, sample){
+                                                    if($.times[vmid][serie.legend]<sample.date) // we only add new point
+                                                    {
+                                                        $.times[vmid][serie.legend] = sample.date // store the latest time value
+                                                        getSerie(that.series, serie.legend).addPoint([sample.date, sample.data], false, true);
+                                                    }
+                                                });
+                                            });
+                                            that.redraw();
+                                        }
+                                    });
+                                }, 2000);
+                            }
+                        }
+                    },
+
+                    rangeSelector: {
+                        buttons: [{
+                            count: 1,
+                            type: 'minute',
+                            text: '1M'
+                        }, {
+                            count: 5,
+                            type: 'minute',
+                            text: '5M'
+                        }, {
+                            type: 'all',
+                            text: 'All'
+                        }],
+                        inputEnabled: false,
+                        selected: 0
+                    },
+
+                    title : {
+                        text : vmname
+                    },
+
+                    exporting: {
+                        enabled: true
+                    },
+
+                    series : $.series[vmid]
+                });
+            }
         });
     }
 

@@ -86,16 +86,13 @@ public class JvmMonitoring implements Runnable
                 || nameIsInIncludedPatterns(jvm.getName())                       );
     }
 
-    public List<Jvm> listJvms(long since) throws IOException
+    public List<Jvm> listJvms() throws IOException
     {
         List<Jvm> jvmWatchers = new ArrayList<Jvm>();
 
         for(JvmWatcher jvmWatcher : this.watchers)
         {
-            if(jvmWatcher.getJvmStartTime()>since)
-            {
-                jvmWatchers.add(jvmWatcher.getJvm());
-            }
+            jvmWatchers.add(jvmWatcher.getJvm());
         }
 
         return jvmWatchers;

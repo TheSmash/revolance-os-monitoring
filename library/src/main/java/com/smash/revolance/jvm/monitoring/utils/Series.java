@@ -5,7 +5,6 @@ import com.smash.revolance.jvm.monitoring.commands.JstatCommand;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by wsmash on 16/11/13.
@@ -13,6 +12,11 @@ import java.util.Set;
 public class Series
 {
     private Map<String, Serie> series = new HashMap();
+
+    public Map<String, Serie> getSeries()
+    {
+        return series;
+    }
 
     public void addSerie(String key, Serie serie)
     {
@@ -67,11 +71,6 @@ public class Series
     public Serie getSerie(JstatCommand.Column column)
     {
         return getSerie( String.valueOf( column ) );
-    }
-
-    public Set<String> getLabels()
-    {
-        return series.keySet();
     }
 
     public void addSample(String col, long date, double data)

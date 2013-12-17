@@ -63,7 +63,7 @@ public class JvmWatcherWatchersTest
         JvmMonitoring watchers = new JvmMonitoring(vmName);
         watchers.update();
 
-        List<Jvm> jvmWatchers = Jvms.find(watchers.listJvms(0), new JvmSearchCriteria(By.VMNAME, vmName));
+        List<Jvm> jvmWatchers = Jvms.find(watchers.listJvms(), new JvmSearchCriteria(By.VMNAME, vmName));
         Jvm memoryConsumer = jvmWatchers.get(0);
 
         assertThat(memoryConsumer.getName(), equalTo(VMNAME));

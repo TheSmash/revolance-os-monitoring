@@ -12,8 +12,8 @@
         <script src="${pageContext.request.contextPath}/libs/jquery/js/jquery.min.js"></script>
 
         <!-- JQuery UI -->
-        <script src="${pageContext.request.contextPath}/libs/jquery/js/jquery-ui-1.10.3.custom.min.js"></script>
-        <script src="${pageContext.request.contextPath}/libs/jquery/css/jquery-ui-1.10.3.custom.min.css"></script>
+        <!--<script src="${pageContext.request.contextPath}/libs/jquery/js/jquery-ui-1.10.3.custom.min.js"></script>-->
+        <!--<script src="${pageContext.request.contextPath}/libs/jquery/css/jquery-ui-1.10.3.custom.min.css"></script>-->
 
         <!-- Twitter Bootstrap-->
         <link href="${pageContext.request.contextPath}/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen"/>

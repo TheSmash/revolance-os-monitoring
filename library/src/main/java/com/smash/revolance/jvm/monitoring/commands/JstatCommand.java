@@ -12,6 +12,7 @@ import java.util.*;
 public class JstatCommand extends CmdlineHelper
 {
     private final long startTime;
+    private long date;
 
     public JstatCommand(Jvm jvm, Option[] options) throws IOException
     {
@@ -23,13 +24,13 @@ public class JstatCommand extends CmdlineHelper
         {
             cmdline.add(option.getValue());
         }
-        cmdline.add("-t");
         cmdline.add(jvm.getId());
         cmd(cmdline.toArray(new String[cmdline.size()]));
     }
 
     public List<Map<String, String>> execute() throws IOException, InterruptedException
     {
+        date = System.currentTimeMillis();
         sync().exec();
         return parse(startTime, out().split("\\n"));
     }
@@ -56,13 +57,13 @@ public class JstatCommand extends CmdlineHelper
         {
             if(firstRow)
             {
-                firstRow = false; // First row is the column
+                firstRow = false; // First row is the columns
             }
             else
             {
                 Map<String, String> serie = new HashMap<String, String>();
+                serie.put(String.valueOf(Column.Timestamp), ""+date);
 
-                boolean firstSample = true;
                 String[] samples = sample.split(" ");
                 Iterator<String> it = columns.iterator();
                 for (int sampleIdx = 0; sampleIdx < samples.length; sampleIdx++) {
@@ -70,16 +71,7 @@ public class JstatCommand extends CmdlineHelper
                     {
                         String column = it.next();
                         String data = samples[sampleIdx].replaceAll(",", ".");
-                        if(firstSample) // firstSample is the timestamp
-                        {
-                            firstSample = false;
-                            long value = start + Long.parseLong(data.split("\\.")[0]);
-                            serie.put(column, ""+value);
-                        }
-                        else
-                        {
-                            serie.put(column, data);
-                        }
+                        serie.put(column, data);
                     }
                 }
                 series.add(serie);

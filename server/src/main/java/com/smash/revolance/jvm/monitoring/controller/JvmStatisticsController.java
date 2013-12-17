@@ -38,19 +38,19 @@ public class JvmStatisticsController
 
     @ResponseBody
     @RequestMapping(value = "/api/vms", method = RequestMethod.GET, headers="Accept=application/json")
-    public List<Jvm> listJvms(@RequestParam(value = "since", defaultValue = "0") final long since, @RequestParam(value = "simulate", defaultValue = "false")  final boolean simulate) throws IOException
+    public List<Jvm> listJvms(@RequestParam(value = "simulate", defaultValue = "false")  final boolean simulate) throws IOException
     {
         if(simulate)
             return asList(mock);
 
-        return monitoring.listJvms(since);
+        return monitoring.listJvms();
     }
 
     @ResponseBody
     @RequestMapping(value = "/api/vms/{vmid}", method = RequestMethod.GET, headers="Accept=application/json")
     public Jvm getJvm(@PathVariable("vmid") final String vmid, @RequestParam(value = "since", defaultValue = "0") final long since, @RequestParam(value = "simulate", defaultValue = "false") final boolean simulate) throws IOException
     {
-        List<Jvm> jvms = Jvms.find(listJvms(since, simulate), new JvmSearchCriteria(By.VMID, vmid));
+        List<Jvm> jvms = Jvms.find(listJvms(simulate), new JvmSearchCriteria(By.VMID, vmid));
         if(jvms.isEmpty())
         {
             jvms.add(new NullJvm());
