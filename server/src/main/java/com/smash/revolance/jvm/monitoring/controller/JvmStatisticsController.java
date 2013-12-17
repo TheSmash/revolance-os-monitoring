@@ -82,4 +82,12 @@ public class JvmStatisticsController
         return new ModelAndView("JvmList");
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/shutdown", headers="Accept=application/json")
+    public String stop() throws IOException
+    {
+        System.exit(0);
+        return "Bye bye!";
+    }
+
 }
