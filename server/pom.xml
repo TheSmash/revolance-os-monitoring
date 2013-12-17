@@ -44,23 +44,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unzip-memory-consumer</id>
-                        <phase>process-test-resources</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includeArtifactIds>jvm-monitoring-materials-memory-consumer</includeArtifactIds>
-                            <outputDirectory>target/materials</outputDirectory>
-                            <includes>**/**.stats</includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
 
         </plugins>
     </build>

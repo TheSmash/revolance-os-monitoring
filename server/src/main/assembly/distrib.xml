@@ -23,6 +23,15 @@
         </fileSet>
 
         <fileSet>
+            <directory>${basedir}/target/materials</directory>
+            <outputDirectory>/</outputDirectory>
+            <excludes>
+                <exclude>**/*.stats</exclude>
+            </excludes>
+            <fileMode>0777</fileMode>
+        </fileSet>
+
+        <fileSet>
             <directory>${basedir}/target</directory>
             <outputDirectory>/bin</outputDirectory>
             <includes>
@@ -43,7 +52,7 @@
         <dependencySet>
             <outputDirectory>/samples</outputDirectory>
             <includes>
-                <include>${project.groupId}:${project.artifactId}:${project.version}:zip</include>
+                <include>${project.groupId}:jvm-monitoring-materials-memory-consumer</include>
             </includes>
         </dependencySet>
     </dependencySets>
