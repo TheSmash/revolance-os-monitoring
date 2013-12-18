@@ -25,6 +25,19 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>com.smash.revolance</groupId>
+            <artifactId>os-monitoring-process</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.smash.revolance</groupId>
+            <artifactId>os-monitoring-filesystem</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.smash.revolance</groupId>
+            <artifactId>os-monitoring-commons</artifactId>
+        </dependency>
+
         <!-- Spring 3 dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -74,10 +87,6 @@
         <dependency>
             <groupId>org.rendersnake</groupId>
             <artifactId>rendersnake</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.smash.revolance</groupId>
-            <artifactId>os-monitoring-library</artifactId>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>

@@ -59,7 +59,7 @@
     {
         $.times[vmid] = new Object();
         $.series[vmid] = new Array();
-        $.getJSON("/jvm-monitoring-server/api/vms/"+vmid+"/metrics/?since=0", function(results) {
+        $.getJSON("/os-monitoring-server/api/processes/"+vmid+"/metrics/?since=0", function(results) {
             if (results)
             {
 
@@ -79,7 +79,7 @@
                             load : function() {
                                 var that = this;
                                 setInterval(function() {
-                                    $.getJSON("/jvm-monitoring-server/api/vms/"+vmid+"/metrics/?since="+(new Date().getTime()-2000), function(results) {
+                                    $.getJSON("/os-monitoring-server/api/processes/"+vmid+"/metrics/?since="+(new Date().getTime()-2000), function(results) {
                                         if (results)
                                         {
                                             var series = new Array();

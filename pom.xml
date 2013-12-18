@@ -38,7 +38,9 @@
 
     <modules>
         <module>materials</module>
-        <module>library</module>
+        <module>commons</module>
+        <module>process</module>
+        <module>filesystem</module>
         <module>server</module>
         <module>distrib</module>
     </modules>
@@ -49,7 +51,17 @@
             <!-- Distrib artifact components management -->
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>os-monitoring-library</artifactId>
+                <artifactId>os-monitoring-process</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>os-monitoring-filesystem</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smash.revolance</groupId>
+                <artifactId>os-monitoring-commons</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

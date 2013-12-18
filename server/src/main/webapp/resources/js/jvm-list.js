@@ -21,7 +21,7 @@
 
     $.updateJvmList = function()
     {
-        $.getJSON("/jvm-monitoring-server/api/vms/?since=0", function(jvms) {
+        $.getJSON("/os-monitoring-server/api/processes/?since=0", function(jvms) {
             $("#jvm-list").find("tr").remove();
             $.each(jvms, function(idx, jvm){
                 if(!isJvmListed(jvm.id))
